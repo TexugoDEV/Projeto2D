@@ -11,6 +11,12 @@ public class PlayerController : MonoBehaviour
     private Vector3 facingRight;
     private Vector3 facingLeft;
 
+    public bool ground;
+    public Transform groundDetection;
+    public LayerMask groundMask;
+
+    public int doubleJump = 1;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +29,24 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ground = Physics2D.OverlapCircle(groundDetection.position, 0.2f, groundMask);
+
+        if (Input.GetButtonDown("Jump") && ground == true)
+        {
+            rb.velocity = Vector2.up * 12;
+        }
+
+        if (Input.GetButtonDown("Jump") && ground == false && doubleJump > 0)
+        {
+            rb.velocity = Vector2.up * 12;
+            doubleJump--;
+
+        }
+        if (ground)
+        {
+            doubleJump = 1;
+        }
+
         direction = Input.GetAxis("Horizontal");
 
         if(direction > 0)
